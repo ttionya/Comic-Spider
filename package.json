@@ -1,24 +1,25 @@
 {
-  "name": "template-spider",
-  "version": "2.0.0",
-  "description": "简单的爬虫模板，适用于抓取一些简单的页面链接、进行下载等。",
+  "name": "u17-comic-spider",
+  "version": "1.0.0",
+  "description": "U17 漫画下载",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node --expose-gc index.js"
+    "start": "./node_modules/babel-cli/bin/babel-node.js --expose-gc index.js"
   },
   "keywords": [
-    "spider"
+    "spider",
+    "U17"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ttionya/Template-Spider.git"
+    "url": "git+https://github.com/ttionya/U17-Comic-Spider.git"
   },
   "author": "ttionya",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/ttionya/Template-Spider/issues"
+    "url": "https://github.com/ttionya/U17-Comic-Spider/issues"
   },
-  "homepage": "https://github.com/ttionya/Template-Spider#readme",
+  "homepage": "https://github.com/ttionya/U17-Comic-Spider#readme",
   "dependencies": {
     "async": "^2.6.0",
     "babel-cli": "^6.26.0",
