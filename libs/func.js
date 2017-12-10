@@ -27,7 +27,10 @@ const getHeaderObj = () => {
     return headers;
 }
 
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 export default {
     fsExistsSync,
-    getHeaderObj
+    getHeaderObj,
+    sleep
 }

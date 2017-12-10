@@ -9,8 +9,6 @@ import logger from './logger';
 import func from './func';
 
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
-
 // 根据章节 Id 获得图片地址（免费章节）
 let fetchFreeChapterImgList = chapterId => {
     return new Promise((resolve, reject) => {
@@ -140,7 +138,7 @@ let downloadImg = listData => {
             await download(list.url)
                 .then(data => fs.writeFileSync(`${chapterPath}/${list.name}.jpg`, data));
 
-            await sleep(config.delay);
+            await func.sleep(config.delay);
 
             // 并发数计数器反向 +1s
             concurrencyCount--;
