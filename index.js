@@ -3,24 +3,15 @@ import fs from 'fs';
 import superAgent from 'superagent';
 import cheerio from 'cheerio';
 import mkdirp from 'mkdirp';
-import fsExistsSync from './libs/isExistDir';
 import fetch from './libs/fetch';
 import config from './config';
 import logger from './libs/logger';
+import func from './libs/func';
 
-
-// 请求头信息
-let configHeaders = config.headers,
-    headers = {};
-
-// 构造请求头信息
-for (let key in configHeaders) {
-    headers[key] = configHeaders[key];
-}
 
 // 获得信息
 superAgent(config.request.method, `http://www.u17.com/comic/${config.downloadComicId}.html`)
-    .set(headers)
+    .set(func.getHeaderObj())
     .set({
         'Referer': 'http://u17.com/'
     })
@@ -40,7 +31,7 @@ superAgent(config.request.method, `http://www.u17.com/comic/${config.downloadCom
 
             // 创建文件夹
             let comicPath = `comic/${$('h1.fl').text().trim()}`;
-            !fsExistsSync(comicPath) && mkdirp.sync(comicPath);
+            !func.fsExistsSync(comicPath) && mkdirp.sync(comicPath);
 
             for (let i = 0, len = list.length, item; i < len; i++) {
                 item = list[i].attribs;

@@ -4,27 +4,18 @@ import cheerio from 'cheerio';
 import { mapLimit } from 'async';
 import download from 'download';
 import mkdirp from 'mkdirp';
-import fsExistsSync from './isExistDir';
 import config from '../config';
 import logger from './logger';
+import func from './func';
 
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 // 根据章节 Id 获得图片地址（免费章节）
 let fetchFreeChapterImgList = chapterId => {
-    // 请求头信息
-    let configHeaders = config.headers,
-        headers = {};
-
-    // 构造请求头信息
-    for (let key in configHeaders) {
-        headers[key] = configHeaders[key];
-    }
-
     return new Promise((resolve, reject) => {
         superAgent(config.request.method, `http://www.u17.com/chapter/${chapterId}.html`)
-            .set(headers)
+            .set(func.getHeaderObj())
             .buffer(true) // must
             .redirects(config.request.redirects)
             .query(config.request.query)
@@ -67,18 +58,9 @@ let fetchFreeChapterImgList = chapterId => {
 
 // 根据章节 Id 获得图片地址（通用接口 免费 + 付费 + VIP）
 let fetchChapterImgList = chapterId => {
-    // 请求头信息
-    let configHeaders = config.headers,
-        headers = {};
-
-    // 构造请求头信息
-    for (let key in configHeaders) {
-        headers[key] = configHeaders[key];
-    }
-
     return new Promise((resolve, reject) => {
         superAgent(config.request.method, `http://www.u17.com/comic/ajax.php?mod=chapter&act=get_chapter&chapter_id=${chapterId}`)
-            .set(headers)
+            .set(func.getHeaderObj())
             .set({
                 'Referer': `http://www.u17.com/buy_chapter_choice.php?chapter_id=${chapterId}`
             })
@@ -134,24 +116,17 @@ let fetchChapterImgList = chapterId => {
 let downloadImg = listData => {
     return new Promise((resolve, reject) => {
 
-        let concurrencyCount = 0,   // 并发数
-            configHeaders = config.headers,
-            headers = {};           // 请求头信息
-
-        // 构造请求头信息
-        for (let key in configHeaders) {
-            headers[key] = configHeaders[key];
-        }
+        let concurrencyCount = 0;   // 并发数
 
         // 不存在章节文件夹则创建
         let chapterPath = `${listData.path}/${listData.name}`;
-        !fsExistsSync(chapterPath) && mkdirp.sync(chapterPath);
+        !func.fsExistsSync(chapterPath) && mkdirp.sync(chapterPath);
 
         mapLimit(listData.list, config.limit, async list => {
             const log = logger.getLogger(chapterPath), // 日志
                 filename = `${chapterPath}/${list.name}.jpg`;
             
-            if (fsExistsSync(filename)) {
+            if (func.fsExistsSync(filename)) {
                 log.warn(`【第${list.name}张】：该文件已存在`);
 
                 return '';
