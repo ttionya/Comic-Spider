@@ -4,6 +4,14 @@ export default {
     // 一次一个...不要搞事
     downloadComicId: 13707,
 
+
+    // 要下载的章节 Id 和 标题
+    // 一次一个...不要搞事
+    // 只对 npm run chapter 有效
+    downloadChapterId: 0,
+    downloadChapterDir: '', // 漫画文件夹名
+
+
     // 请求相关内容
     request: {
 

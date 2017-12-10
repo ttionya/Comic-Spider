@@ -4,7 +4,8 @@
   "description": "U17 漫画下载",
   "main": "index.js",
   "scripts": {
-    "start": "./node_modules/babel-cli/bin/babel-node.js --expose-gc index.js"
+    "start": "./node_modules/babel-cli/bin/babel-node.js --expose-gc index.js",
+    "chapter": "./node_modules/babel-cli/bin/babel-node.js --expose-gc dlChapter.js"
   },
   "keywords": [
     "spider",
