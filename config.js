@@ -1,5 +1,9 @@
 export default {
 
+    // 要下载的漫画 Id
+    // 一次一个...不要搞事
+    downloadComicId: 13707,
+
     // 请求相关内容
     request: {
 
@@ -29,7 +33,7 @@ export default {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
         'Accept-Encoding': 'gzip, deflate, sdch',
         'Cookie': '',
-        'Host': '',
+        'Host': 'www.u17.com',
         'Referer': '',
         'DNT': 1,
         'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36'
@@ -37,13 +41,13 @@ export default {
 
 
     // 并发数，过高会被当作攻击，建议 20 - 30
-    limit: 30,
+    limit: 2,
 
     // 每次请求延迟时间，以 ms 计算
-    delay: 0,
+    delay: 1000,
 
     // 开启下载功能
-    download: false,
+    download: true,
 
 
     // log4js
@@ -54,6 +58,6 @@ export default {
 
         // 保存到文件
         // 置空表示不保存，放在 logs 文件夹里
-        logFile: 'logs/logs.log'
+        logFile: ''
     }
 }
