@@ -9,6 +9,40 @@ import logger from './logger';
 import func from './func';
 
 
+// 获得完整章节标题
+let getFullTitle = chapterId => {
+    return new Promise((resolve, reject) => {
+        superAgent(config.request.method, `http://www.u17.com/chapter/${chapterId}.html`)
+            .set(func.getHeaderObj())
+            .buffer(true) // must
+            .redirects(config.request.redirects)
+            .query(config.request.query)
+            .send(config.request.send)
+            .end(async (err, result) => {
+                const log = logger.getLogger(`获取【${chapterId.toString()}】完整章节标题`); // 日志
+
+                if (err) {
+                    log.error(err);
+
+                    reject(err);
+                }
+                else {
+                    // 章节名
+                    let $ = cheerio.load(result.text),
+                        chapterName = '';
+
+                    try {
+                        chapterName = /《[^》]*》(.*)在线阅读：/.exec($('meta[name="description"]')[0].attribs.content)[1];
+                    }
+                    catch (e) {}
+                    
+                    log.info(`章节【${chapterId.toString()}】的完整标题为【${chapterName}】`);
+                    resolve(chapterName);
+                }
+            });
+    });
+};
+
 // 根据章节 Id 获得图片地址（免费章节）
 let fetchFreeChapterImgList = chapterId => {
     return new Promise((resolve, reject) => {
@@ -29,7 +63,12 @@ let fetchFreeChapterImgList = chapterId => {
                 else {
                     // 章节名
                     let $ = cheerio.load(result.text),
+                        chapterName = Date.now();
+
+                    try {
                         chapterName = /《[^》]*》(.*)在线阅读：/.exec($('meta[name="description"]')[0].attribs.content)[1];
+                    }
+                    catch (e) {}
                     
                     // 图片列表
                     let regex = /"src":"([^"]*)"/g,
@@ -91,6 +130,13 @@ let fetchChapterImgList = chapterId => {
                         let chapterName = json.ext.chapter.name,
                             imgList = json.ext.image_list,
                             imgUrlData = [];
+
+                        // 判断是否是完整标题，否则获取完整标题
+                        if (/\.{3}/.test(chapterName)) {
+                            let _chapterName = await getFullTitle(chapterId);
+
+                            chapterName = _chapterName ? _chapterName : chapterName;
+                        }
 
                         for (let num in imgList) {
                             imgUrlData.push({
